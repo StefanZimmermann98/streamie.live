@@ -24,7 +24,7 @@ Development of an on-premise web application for managing one-to-many streams. I
 
 ## Contributing
 
-Closed Contributor group.
+Open Contributor group. Help if you want to.
 
 ## Authors and acknowledgment
 
