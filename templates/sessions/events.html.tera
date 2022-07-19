@@ -1,0 +1,57 @@
+{% include "layout/header" %}
+
+    {% include "layout/navbar_begin" %}
+
+    <table class="ui selectable celled padded table">
+        <thead>
+          <tr><th class="single line">Plattform</th>
+          <th>Beginn</th>
+          <th>Ende</th>
+          <th>Name</th>
+          <th>Beschreibung</th>
+          <th></th>
+        </tr></thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                    <td>
+                        {{session.stream.stream_type}}
+                    
+                    </td>
+                    <td class="single line">
+                        {{session.start | date(format="%d.%m.%Y %H:%M",timezone="Europe/Berlin")}}
+                    </td>
+                    <td class="single line">
+                        {{session.end | date(format="%d.%m.%Y %H:%M",timezone="Europe/Berlin")}}
+                    </td>
+                    <td>
+                        {{session.name}}
+                    </td>
+                    <td>
+                        {{session.description}}
+                    </td>
+                    <td class="selectable">
+                        <a href="/session/{{session._id}}">
+                        Visit
+                        </a>
+                    </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    
+        
+
+
+
+
+
+
+
+
+
+
+    
+    {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

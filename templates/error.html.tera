@@ -1,0 +1,16 @@
+{% include "layout/header" %}
+
+    {% include "layout/navbar_begin" %}
+
+    <div class="ui error message">
+        <div class="header">
+          Leider konnten wir dich nicht authentifizieren
+        </div>
+        <ul class="list">
+          <li>Bitte logge dich erneut ein.</li>
+        </ul>
+      </div>
+    
+    {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

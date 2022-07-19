@@ -1,0 +1,71 @@
+
+{% include "layout/header" %}
+
+{% include "layout/navbar_begin" %}
+<div class="page-login">
+    <div class="ui centered grid container">
+            <div class="nine wide column">
+                <div class="ui fluid card">
+                    <div class ="content">
+                        <form id="update_session_form" class="ui form" method="POST" action="/admin/session/update">
+                            <div class="field">
+                                            <label>Alter Streamtitel</label>
+                                            <input type="text" size="20" maxlength="60" name="old_name">
+                            </div>
+                             <div class="field">
+                                            <label>Anfangszeit(D.M.Y H:M:SEC)</label>
+                                            <input type="text" size="20" maxlength="30" name="start">
+                            </div>
+                             <div class="field">
+                                            <label>Ende(D.M.Y H:M:SEC)</label>
+                                            <input type="text" size="20" maxlength="30" name="end">
+                            </div>
+                            <div class="field">
+                                            <label>Streamname</label>
+                                            <input type="text" size="20" maxlength="60" name="name">
+                            </div>
+                            <div class="field">
+                                            <label>Beschreibung</label>
+                                            <input type="text" size="20" maxlength="80" name="description">
+                            </div>
+                             <div class="field">
+                                            <label> Link des Content-Creators</label>
+                                            <input type="text" size="30" maxlength="50" name="link">
+                            </div>
+                            <div class="field">
+                                            <label> Channelname</label>
+                                            <input type="text" size="20" maxlength="40" name="channel">
+                            </div>
+                            <div class="field">
+                                            <label> Plattform (Twitch, Youtube, None)</label>
+                                            <input type="text" size="20" maxlength="30" name="plattform">
+                            </div>
+
+                            <input type="hidden" name="_method" value="PUT">
+                            <button type="submit">Session Updaten</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+          {% include "layout/navbar_end" %}
+
+    {% include "layout/footer" %}
+
+    <script>
+            var robin;
+           document.getElementById('update_session_form').addEventListener(
+                "submit",
+                    async function(e){
+                    e.preventDefault();
+                    robin = new FormData(e.target);
+
+                    return fetch("/admin/session/update",{
+                    method: 'PUT',
+                    body: robin
+                    });
+                    });
+
+    </script>

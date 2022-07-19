@@ -1,0 +1,95 @@
+
+{% include "layout/header" %}
+
+{% include "layout/navbar_begin" %}
+      
+    <div class="page-login">
+    <div class="ui centered grid container">
+        <div class="nine wide column">
+        <div class="ui fluid card">
+            <div class="content">
+            <form id="login_form" class="ui form" method="POST" action="/login/proceed">
+            <div class="field">
+                <label>User</label>
+                <input type="text" name="user" placeholder="User">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="pass" placeholder="Password">
+            </div>
+            <div>
+                 <img src="{{ captcha }}">
+            </div>
+            </BR>
+            <div class="field">
+                <input type="text" name="captcha" placeholder="Captcha">
+            </div>
+                <a href="/login">
+                   <button class="ui primary labeled icon button" type="button" id="refresh"  />
+                   <i class="unlock alternate icon"></i>
+                   Refresh Captcha
+                    </button>
+                </a>
+            <button class="ui primary labeled icon button" type="submit">
+                <i class="unlock alternate icon"></i>
+                Login
+            </button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div class="ui basic modal">
+        <div class="ui icon header">
+          <i class="archive icon"></i>
+          Login nicht möglich
+        </div>
+        <div class="content">
+          <p>Es scheint so als wäre dein Benutzername oder dein Passwort falsch. Probiere es bitte erneut.</p>
+        </div>
+        <div class="actions">
+          <div class="ui red basic cancel inverted button">
+            <i class="remove icon"></i>
+                Verstanden
+          </div>
+        </div>
+      </div>
+
+    <script>
+
+        $('#login_form').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = document.getElementById('login_form');
+            var action = form.getAttribute('action');
+
+            var formData = new FormData(form);
+
+            console.group('Login Procedure');
+            console.log(action);
+            console.log(formData);
+            console.groupEnd();
+
+            req = new XMLHttpRequest();
+            req.open("POST", action);
+            req.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200 && this.response == "Eingeloggt") {
+                    window.location = "/sessions";
+                } else if (this.readyState == 4) {
+                    $('.ui.basic.modal')
+                        .modal('show')
+                    ;
+                }
+            };
+            req.send(formData);
+
+        });
+
+
+    </script>
+
+
+      {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

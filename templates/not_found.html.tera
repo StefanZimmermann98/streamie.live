@@ -1,0 +1,16 @@
+{% include "layout/header" %}
+</BR>
+</BR>
+<div class="ui two column centered grid">
+    <div class="column">
+        <div class="ui warning message">
+            <i class="close icon"></i>
+            <div class="header">
+            Nicht gefunden
+            </div>
+            Keine Ahnung wonach du suchst aber hier ist es nicht.
+        </div>
+    </div>
+</div>
+
+{% include "layout/footer" %}

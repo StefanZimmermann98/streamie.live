@@ -1,0 +1,180 @@
+{% include "layout/header" %}
+
+    {% include "layout/navbar_begin" %}
+
+    <button id="add_user" class="ui basic button">
+        <i class="icon user"></i>
+        Neuen Benutzer anlegen
+    </button>
+
+    <table class="ui selectable celled padded table">
+        <thead>
+          <tr><th class="single line">Username</th>
+          <th>Anzeigename</th>
+          <th>Rolle</th>
+          <th>Aktion</th>
+          <th></th>
+        </tr></thead>
+        <tbody>
+            {% for u in user %}
+            <tr>
+                <td>
+                    {{u.username}}
+                </td>
+                <td>
+                    {{u.fullname}}
+                </td>
+                <td>
+                    {{u.role}}
+                </td>
+                <!-- <td class="selectable">
+                    <a href="">
+                        Bearbeiten
+                    </a>
+                </td> -->
+                <td class="selectable delete_user_btn">
+                    <a href="#" data-user="{{u._id}}">
+                        Löschen
+                    </a>
+                </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    
+      <div id="add_user_modal" class="ui longer modal">
+        <div class="header">Neuen Benutzer anlegen</div>
+        <div class="scrolling content">
+          
+            <form id="add_user_form" class="ui form" action="/usermanagement/add">
+                <div class="field">
+                  <label>Anzeigename</label>
+                  <input type="text" name="fullname" placeholder="Max Mustermann">
+                </div>
+                <div class="field">
+                  <label>Username</label>
+                  <input type="text" name="username" placeholder="Max98">
+                </div>
+                <div class="field">
+                  <label>Initialpasswort</label>
+                  <input type="password" name="password" placeholder="">
+                </div>
+                <div class="field">
+                  <label>Rolle</label>
+                  <select class="ui fluid dropdown" name="role">
+                    <option value=""></option>
+                    <option value="ADMIN">Administrator</option>
+                    <option value="MODERATOR">Moderator</option>
+                    <option value="USER">Benutzer</option>
+                  </select>
+                </div>
+                <div id="error_response" hidden>
+                    <div class="ui negative message">
+                        <div class="header">
+                            Das hat leider nicht geklappt.
+                        </div>
+                        <p>Hast du auch wirklich alle Daten eingetragen?
+                      </p></div>
+                </div>
+                </BR>
+                <button class="ui button" type="submit">Submit</button>
+            </form>
+
+        </div>
+      </div>
+
+      <div id="remove_user_modal" class="ui small modal">
+        <div class="header">Benutzer löschen</div>
+        <div id="remove_user_modal_content" class="content">
+          
+
+
+        </div>
+        <input type="hidden" id="remove_user_id" value="">
+        <div class="actions">
+            <div id="delete_selected_user" class="ui approve button">Ja</div>
+            <div class="ui cancel button">Abbrechen</div>
+          </div>
+      </div>
+
+
+      <script>
+
+        document.querySelector('#add_user').addEventListener('click', function() {
+            $('#add_user_modal')
+                .modal('show')
+            ;
+        });
+
+        document.querySelector('#add_user_form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var form = document.getElementById('add_user_form');
+            var action = form.getAttribute('action');
+
+            var formData = new FormData(form);
+
+            console.group('Add Procedure');
+            console.log(action);
+            console.groupEnd();
+
+            req = new XMLHttpRequest();
+            req.open("POST", action);
+            req.onreadystatechange = function() {
+                let r = JSON.parse(this.response);
+                if (this.readyState == 4 && this.status == 200 && r.status == 1) {
+                    $('#add_user_modal')
+                        .modal('hide')
+                    ;
+                    $('#error_response').prop('hidden', true);
+                } else if (this.readyState == 4) {
+                    $('#error_response').prop('hidden', false);
+                }
+            };
+            req.send(formData);
+        });
+
+        document.querySelectorAll('.delete_user_btn').forEach(element => {
+            element.addEventListener('click', function(e) {
+                let userid = e.target.getAttribute('data-user');
+                document.querySelector('#remove_user_modal_content').innerHTML = "Möchtest du den User <b>" + userid + "</b> wirklich löschen?";
+                document.querySelector('#remove_user_id').value = userid;
+                $('#remove_user_modal')
+                    .modal('show')
+                ;
+            });
+        });
+
+        document.querySelector('#delete_selected_user').addEventListener('click', function(e) {
+                let userid =  document.querySelector('#remove_user_id').value;
+                req = new XMLHttpRequest();
+                req.open("GET", '/usermanagement/remove/' + userid);
+                req.onreadystatechange = function() {
+                    let r = JSON.parse(this.response);
+                    if (this.readyState == 4 && this.status == 200 && r.status == 1) {
+                        $('#remove_user_modal')
+                            .modal('hide')
+                        ;
+                       
+                        document.querySelector('#remove_user_modal_content').innerHTML = "";
+                        document.querySelector('#remove_user_id').value = "";
+                    }
+                };
+                req.send();
+                
+        });
+
+        
+    
+      </script>
+
+
+
+
+
+
+
+    
+    {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

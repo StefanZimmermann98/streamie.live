@@ -1,0 +1,21 @@
+{
+    "short_name": "Streamie",
+    "name": "Streamie.Live",
+    "icons": [
+      
+    ],
+    "start_url": "/",
+    "background_color": "#0295A9",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#FDD037",
+    "shortcuts": [
+      {
+        "name": "Direkter Login",
+        "short_name": "Login",
+        "description": "Logge dich direkt in die App ein",
+        "url": "/login"
+      }
+    ],
+    "description": "Live Streams for you"
+  }

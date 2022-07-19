@@ -1,0 +1,19 @@
+    </div>
+  </div>
+</div>
+<div class="ui inverted vertical footer segment">
+  <div class="ui container">
+      <a href="/datenschutz.html">Datenschutz</a>
+  </div>
+</div>
+
+<script>
+
+$('.ui.sidebar')
+  .sidebar({
+    context: $('.bottom.segment')
+  })
+  .sidebar('attach events', '.menu .item')
+;
+
+</script>

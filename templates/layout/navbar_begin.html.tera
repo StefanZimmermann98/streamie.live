@@ -1,0 +1,46 @@
+  <div class="ui top attached menu">
+    <a class="item">
+      <i class="sidebar icon"></i>
+      Menu
+    </a>
+  </div>
+  <div class="ui bottom attached segment pushable">
+    <div class="ui inverted labeled icon left inline vertical sidebar menu">
+      {% if jwt == 'None' %}
+        <a class="item" href="/">
+          <i class="home icon"></i>
+          Home
+        </a>
+        <a class="item" href="/login">
+        <i class="block layout icon"></i>
+          Login
+        </a>
+      {% else %}
+        <div class="item" href="/sessions">
+          Hallo {{ fullname }}
+          <script> var token = "{{ jwt }}"; </script>
+        </div>
+        <a class="item" href="/sessions">
+          <i class="smile icon"></i>
+          Events
+        </a>
+        {% if token.role=="ADMIN" %}
+        <a class="item" href="/admin">
+                  <i class="cog icon"></i>
+                  Admin
+                </a>
+                <a class="item" href="/usermanagement">
+                  <i class="user secret icon"></i>
+                  Benutzerverwaltung
+                </a>
+                {%endif%}
+        <a class="item" href="/logout">
+          <i class="calendar icon"></i>
+          Logout
+        </a>
+      {% endif %}
+      
+      
+    </div>
+    <div class="pusher">
+      <div class="ui basic segment">

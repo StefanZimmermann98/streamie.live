@@ -1,0 +1,218 @@
+{% include "layout/header" %}
+
+    {% include "layout/navbar_begin" %}
+    <script>
+     document.addEventListener("DOMContentLoaded", function(event) {
+    var chatView = document.getElementById('chat-view');
+    var messageTemplate = document.getElementById('template-message');
+    var messageField = document.getElementById('message');
+
+    var STATE = {
+      room: "{{ session._id }}",
+      rooms: {},
+      connected: false,
+    }
+
+    function addMessage(room, username, message, user_type, push = false) {
+      if (push) {
+        STATE[room].push({ username, message })
+      }
+
+      if (STATE.room == room) {
+        var node = messageTemplate.content.cloneNode(true);
+        node.querySelector(".comment .content .author").textContent = username;
+        node.querySelector(".comment .content .author").classList.add("chat-" + user_type);
+        node.querySelector(".comment .content .text").textContent = message;
+        chatView.appendChild(node);
+      }
+    }
+
+    function changeRoom(name) {
+      if (STATE.room == name) return;
+      STATE.room = name;
+    }
+
+    function addRoom(name) {
+      if (STATE[name]) {
+        changeRoom(name);
+        return false;
+      }
+
+      STATE[name] = [];
+      changeRoom(name);
+      return true;
+    }
+
+    function subscribe(uri) {
+      var retryTime = 1;
+
+      function connect(uri) {
+        const events = new EventSource(uri);
+
+        events.addEventListener("message", (ev) => {
+          console.log("raw data", JSON.stringify(ev.data));
+          console.log("decoded data", JSON.stringify(JSON.parse(ev.data)));
+          const msg = JSON.parse(ev.data);
+          if (!"message" in msg || !"room" in msg || !"username" in msg) return;
+          addMessage(msg.room, msg.username, msg.message, msg.chat_type, true);
+        });
+
+        events.addEventListener("open", () => {
+          STATE.connected = true;
+          console.log(`connected to event stream at ${uri}`);
+          retryTime = 1;
+        });
+
+        events.addEventListener("error", () => {
+          STATE.connected = false;
+          events.close();
+
+          let timeout = retryTime;
+          retryTime = Math.min(64, retryTime * 2);
+          console.log(`connection lost. attempting to reconnect in ${timeout}s`);
+          setTimeout(() => connect(uri), (() => timeout * 1000)());
+        });
+      }
+
+      connect(uri);
+    }
+
+    function init() {
+
+      // Initialize session room
+      addRoom("{{ session._id }}");
+      changeRoom("{{ session._id }}");
+
+      messageField.addEventListener("keypress", (e) => {
+        if (e.key == 'Enter') {
+          const room = STATE.room;
+          const message = messageField.value;
+          const username = "{{ fullname }}";
+          
+          if (!message || !username) return;
+
+          if (STATE.connected) {
+            fetch("/message", {
+              method: "POST",
+              body: new URLSearchParams({ room, username, message }),
+            }).then((response) => {
+              if (response.ok) messageField.value = "";
+            });
+          }
+        }
+      })
+
+      // Subscribe to server-sent events.
+      subscribe("/chat");
+    }
+
+    init();
+  });
+    </script>
+    <div class="ui grid">
+      <div class="ten wide column">
+        <div class="ui centered card" style="width: 50vw !important;height: 80vh !important; max-height: 100vh !important;">
+            <div class="content">
+              <a href="/sessions"><i class="right floated close link icon"></i></a>
+              <div class="header">{{ session.name }}</div>
+              <div class="meta">
+                </BR>
+                <span class="right floated time">{{ session.start | date(format="%d.%m.%Y %H:%M",timezone="Europe/Berlin") }} - {{ session.end | date(format="%d.%m.%Y %H:%M",timezone="Europe/Berlin") }}</span>
+                </BR>
+                <span class="category">{{ session.stream.stream_type }}</span>
+              </div>
+              <div class="description">
+                <p>{{ session.description }}</p>
+                </BR>
+                {% if session.stream.stream_type == "Twitch" %}
+                    
+                <div id ="twitch-embed" style="height:400px;"></div>
+                <script src="https://embed.twitch.tv/embed/v1.js"></script>
+
+                <script type="text/javascript">
+                    var embed = new Twitch.Embed("twitch-embed",{
+                                    width:"100%",
+                                    height:"100%",
+                                    channel:"{{ session.stream.channel }}",  //hier möglicherweise DB Aufruf,
+                                    layout:"video"
+                                });
+                    embed.addEventListener(Twitch.Embed.VIDEO_READY,() =>{
+                    var player = embed.getPlayer();
+                    player.play();
+                    });
+                    </script>
+
+
+
+                {% elif session.stream.stream_type == "Youtube" %}
+                    
+                <div class="ui embed" data-source="youtube" data-id="{{ session.stream.channel }}" data-placeholder=""></div>
+                <script>
+                    $('.ui.embed').embed();
+                </script>
+
+
+                {% else %}             
+                    Leider ist der angegebene Stream-Typ noch nicht implementiert.
+                {% endif %}
+              </div>
+            </div>
+            <div class="extra content">
+              <div class="right floated author">
+                {{ session.stream.channel }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="six wide column">
+          <div 
+              class = "ui comments" 
+              style = "
+                max-height: 80vh;
+                overflow: scroll;
+              "
+          >
+            <div id="chat-view">
+              <div class="comment">
+                <div class="content">
+                  <a class="author">Streamie.Live</a>
+                  <div class="metadata">
+                    <span class="date">Jetzt</span>
+                  </div>
+                  <div class="text">
+                    Willkommen zur Session, benimm dich bitte im Chat!
+                  </div>
+                </div>
+              </div>
+              <template id="template-message">
+                <div class="comment">
+                  <div class="content">
+                    <a class="author"></a>
+                    <div class="metadata">
+                      <span class="date"></span>
+                    </div>
+                    <div class="text">
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div class="ui reply form" id="message-form">
+              <div class="ui labeled input">
+                <div class="ui label">
+                  {{ fullname }}
+                </div>
+                <input type="text" name="message" id="message" autocomplete="off"
+                  placeholder="Nachricht senden..." autofocus>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    
+    
+    {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

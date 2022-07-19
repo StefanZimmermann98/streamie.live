@@ -1,0 +1,40 @@
+
+{% include "layout/header" %}
+
+{% include "layout/navbar_begin" %}
+<div class="page-login">
+    <div class="ui centered grid container">
+            <div class="nine wide column">
+                <div class="ui fluid card">
+                    <div class ="content">
+                        <form id="delete_session_form" class="ui form" method="POST" action="/session/delete">
+
+                            <div class="field">
+                                            <label>Streamname</label>
+                                            <input id="test" type="text" size="20" maxlength="60" name="name">
+                            </div>
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit">Session Löschen</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+          {% include "layout/navbar_end" %}
+
+    {% include "layout/footer" %}
+
+    <script>
+        document.getElementById('delete_session_form').addEventListener(
+        "submit",
+            async function(e){
+            e.preventDefault();
+            var t = document.getElementById("test");
+            return await fetch("/session/delete/"+ t.value,{
+            method: 'DELETE',
+            });
+            });
+
+    </script>

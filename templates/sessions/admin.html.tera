@@ -1,0 +1,35 @@
+{% include "layout/header" %}
+
+    {% include "layout/navbar_begin" %}
+
+
+    <table class="ui selectable celled padded table">
+    <thead>
+              <tr>
+              <th class="single line">Session erstellen</th>
+              <th>Session bearbeiten</th>
+              <th>Session löschen</th>
+
+              <th></th>
+            </tr></thead>
+            <tbody>
+             <tr>
+                    <td>
+                    <a href="/session/list/create">
+                    <button  class="ui primary labeled icon button" type="submit"  >Erstellen</button>
+                    </a>
+                    </td>
+                    <td>
+                    <a href="/session/list/update">
+                    <button class="ui primary labeled icon button" type="submit">Bearbeiten</button</td>
+                    <td>
+                   <a href="/session/list/delete">
+                    <button  class="ui primary labeled icon button" type="submit">Löschen</button</td>
+                    </a>
+             </tr>
+            </tbody>
+            </table>
+
+    {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}

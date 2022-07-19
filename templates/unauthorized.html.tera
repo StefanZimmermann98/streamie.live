@@ -1,0 +1,16 @@
+{% include "layout/header" %}
+</BR>
+</BR>
+<div class="ui two column centered grid">
+    <div class="column">
+        <div class="ui teal message">
+            <i class="close icon"></i>
+            <div class="header">
+            Keine Berechtigung
+            </div>
+            Du bist hierfür nicht berechtigt, also probiere es garnicht erst.
+        </div>
+    </div>
+</div>
+
+{% include "layout/footer" %}

@@ -1,0 +1,31 @@
+:root {
+    --primaryColor: #0295A9;
+    --primaryColorAccent: #12ADC1;
+    --secondaryColor: #FDD037;
+    --secondaryColorAccent: #FFFFFF;
+}
+
+.ui.top.attached.menu {
+    background-color: var(--primaryColor);
+}
+
+.ui.top.attached.menu > a.item {
+    color: var(--secondaryColorAccent);
+}
+
+.ui.primary.labeled.icon.button {
+    background-color: var(--secondaryColor);
+    color: var(--secondaryColorAccent);
+}
+
+input::selected {
+    border: 1px solid var(--primaryColor);
+}
+
+.chat-admin {
+    color: var(--primaryColor) !important;
+}
+
+.chat-mod {
+    color: goldenrod !important;
+}

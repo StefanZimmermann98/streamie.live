@@ -1,0 +1,48 @@
+{% include "layout/header" %}
+
+{% include "layout/navbar_begin" %}
+      </BR>
+      <div class="ui centered">
+          <img class="ui centered medium rounded image" src="/logo_transparent_cropped.png">
+      </div>
+      
+      <div class="ui piled segment">
+        <h4 class="ui header">Streamie - Ein gemeinsames System für all Ihre Streams</h4>
+        <p>Was ist unsere Vision?</p>
+        <p>Youtube, Twitch, Vimeo, ... als Veranstalter kämpfen Sie mit folgendem Problem: Viele kleinere digitale Events, alle auf unterschiedlichen Streaming-Plattformen. Der Besucherstamm ist allerdings die Gemeinsamkeit.</p>
+        <p>Mit Streamie haben Sie die Möglichkeit On-Premise ein eigenes System zur Verwaltung all dieser Sub-Streams zu hosten.</p>
+        <p>Sie administrieren alle Sessions und der Teilnehmer nutzt eine gemeinsame Plattform um beispielsweise zwischen den Vorträgen flexibel wechseln zu können.</p>
+      </div>
+      <div class="ui cards">
+        <div class="card">
+          <div class="content">
+            <div class="header">Robin Goldbach</div>
+            <div class="meta">Developer</div>
+            <div class="description">
+              
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <div class="header">Maximilian Hanusch</div>
+            <div class="meta">Developer</div>
+            <div class="description">
+              
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="content">
+            <div class="header">Stefan Zimmermann</div>
+            <div class="meta">Developer</div>
+            <div class="description">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      {% include "layout/navbar_end" %}
+
+{% include "layout/footer" %}
